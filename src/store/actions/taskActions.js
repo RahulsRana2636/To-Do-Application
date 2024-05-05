@@ -26,10 +26,22 @@ export const addTask = (task) => {
 };
 
 // Action creator to delete a task
-export const deleteTask = (taskId) => ({
-  type: DELETE_TASK,
-  payload: taskId
-});
+export const deleteTask = (taskId) => {
+  return (dispatch, getState) => {
+    // Dispatch the DELETE_TASK action with the task ID payload
+    dispatch({
+      type: DELETE_TASK,
+      payload: taskId
+    });
+
+    // Get the current tasks from the Redux store state
+    const { tasks } = getState().tasks;
+
+    // Update local storage with the updated tasks array
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  };
+};
+
 
 // Action creator for successful fetch of tasks
 export const fetchTasksSuccess = (tasks) => ({

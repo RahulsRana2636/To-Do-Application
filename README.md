@@ -1,10 +1,31 @@
-# Getting Started with Create React App
+# To-Do Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a simple To-Do Application built with React and Redux.
+
+## Installation
+
+To run this application locally, follow these steps:
+
+1. Clone the repository to your local machine:
+
+
+2. Navigate to the project directory:
+
+### `cd to-do-application`
+
+3. Install the required Node modules using npm:
+
+### ` npm install `
+
+This will install all the necessary dependencies, including React, Redux, React Router DOM, and Redux Thunk.
+
+## Usage
+
+Once the dependencies are installed, you can start the development server by running:
 
 ## Available Scripts
 
-In the project directory, you can run:
+4. In the project directory, you can run:
 
 ### `npm start`
 

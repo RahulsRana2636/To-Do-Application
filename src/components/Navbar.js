@@ -1,8 +1,11 @@
-// Navbar.js
+// src/components/Navbar.js
+
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import Logout from './Logout';
 
-const Navbar = () => {
+const Navbar = ({ isAuthenticated }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
@@ -12,17 +15,33 @@ const Navbar = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <Link to="/" className="nav-link active" aria-current="page">Task List</Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/addtask" className="nav-link active" aria-current="page">Add Task</Link>
-            </li>
+            {isAuthenticated && (
+              <>
+                <li className="nav-item">
+                  <Link to="/tasklist" className="nav-link active">Task List</Link>
+                </li>
+                <li className="nav-item">
+                  <Link to="/addtask" className="nav-link active">Add Task</Link>
+                </li>
+                <li className="nav-item ">
+                  <Logout />
+                </li>
+              </>
+            )}
+            {!isAuthenticated && (
+              <li className="nav-item">
+                <Link to="/" className="nav-link">Login</Link>
+              </li>
+            )}
           </ul>
         </div>
       </div>
     </nav>
   );
-}
+};
 
-export default Navbar;
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps)(Navbar);

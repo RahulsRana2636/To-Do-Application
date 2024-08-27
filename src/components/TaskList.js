@@ -1,21 +1,29 @@
+// src/components/TaskList.js
+
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux'; // Import connect function from react-redux
-import { fetchTasks, deleteTask } from '../store/actions/taskActions'; // Import action creators
+import { connect } from 'react-redux';
+import { fetchTasks, deleteTask } from '../store/actions/taskActions';
+// import { Redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-
-const TaskList = ({ tasks, fetchTasks, deleteTask }) => {
-  // useEffect hook to fetch tasks when the component mounts
+const TaskList = ({ tasks, fetchTasks, deleteTask, isAuthenticated }) => {
+  const navigate = useNavigate();
   useEffect(() => {
-    fetchTasks(); // Dispatch fetchTasks action when component mounts
-  }, [fetchTasks]); 
+    if (isAuthenticated) {
+      fetchTasks();
+    }
+  }, [fetchTasks, isAuthenticated]);
 
-  // Function to handle click event for deleting a task
-  const handleClickDelete = (taskId) => {
-    deleteTask(taskId); // Dispatch deleteTask action with taskId as payload
-    alert('Task deleted successfully'); 
-  };
+  if (!isAuthenticated) {
+    navigate('/')// Redirect to login if not authenticated
+  }
+    // Function to handle click event for deleting a task
+    const handleClickDelete = (taskId) => {
+      deleteTask(taskId); // Dispatch deleteTask action with taskId as payload
+      alert('Task deleted successfully'); 
+    };
+  
 
- 
   return (
     <div>
       <h2 className="task-list-heading">Task List</h2>
@@ -45,10 +53,13 @@ const TaskList = ({ tasks, fetchTasks, deleteTask }) => {
   );
 };
 
-// mapStateToProps function to map state from Redux store to component props
 const mapStateToProps = (state) => ({
-  tasks: state.tasks.tasks // Map tasks state to tasks prop
+  tasks: state.tasks.tasks,
+  isAuthenticated: state.auth.isAuthenticated // Map auth state
 });
 
-// Connect the TaskList component to the Redux store and export it
 export default connect(mapStateToProps, { fetchTasks, deleteTask })(TaskList);
+
+
+
+

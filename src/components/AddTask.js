@@ -1,20 +1,26 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux'; 
 import { addTask } from '../store/actions/taskActions'; 
+import { useNavigate } from 'react-router-dom';
 
 
-const AddTask = ({ addTask }) => {
+const AddTask = ({ addTask, isAuthenticated}) => {
+    const navigate = useNavigate();
   // Define state using useState hook to manage form inputs
   const [task, setTask] = useState({
     taskid: Math.floor(Math.random() * 1000), // Generate a random taskid
     title: '', // Initialize title state
-    description: '' // Initialize description state
+    description: '', // Initialize description state
+    priority: 'High' // Initialize priority state
   });
 
   // Function to handle input changes and update state
   const handleChange = (e) => {
     setTask({ ...task, [e.target.name]: e.target.value }); // Update state with new input value
   };
+  if (!isAuthenticated) {
+    navigate('/')// Redirect to login if not authenticated
+  }
 
   // Function to handle form submission
   const handleSubmit = (e) => {
@@ -24,7 +30,8 @@ const AddTask = ({ addTask }) => {
     setTask({
       taskid: Math.floor(Math.random() * 1000), // Generate a new random taskid
       title: '', // Reset title state
-      description: '' // Reset description state
+      description: '', // Reset description state
+       priority: 'High' // Reset priority state
     });
     alert('Task added successfully'); // Show alert for successful task addition
   };
@@ -43,11 +50,28 @@ const AddTask = ({ addTask }) => {
           <label htmlFor="description" className="form-label">Task Description</label>
           <input type="text" className="form-control" id="description" name="description" value={task.description} onChange={handleChange} minLength={5} required />
         </div>
+        <div className="mb-3">
+          <label htmlFor="priority" className="form-label">Priority</label>
+          <select
+            name="priority"
+            value={task.priority}
+            onChange={handleChange}
+            className="form-control"
+            required
+          >
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
         <button disabled={task.title.length < 5 || task.description.length < 5} type="submit" className="btn btn-primary">Add Task</button>
       </form>
     </div>
   );
 };
 
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated // Map auth state
+});
 // Connect the AddTask component to the Redux store and export it
-export default connect(null, { addTask })(AddTask);
+export default connect(mapStateToProps, { addTask })(AddTask);
